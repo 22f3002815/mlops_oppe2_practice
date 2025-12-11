@@ -1,0 +1,68 @@
+# Service account keys - CRITICAL
+key.json
+*.json.key
+*-key.json
+service-account*.json
+
+# Large data files
+data/
+*.csv
+transactions_*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Machine Learning Models
+app/model/
+*.pkl
+*.h5
+*.pt
+*.pth
+*.joblib
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Environment
+.env
+.venv
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+
+# DVC (if not using)
+.dvc/
+.dvcignore
+
+# Shell scripts (optional - keep if needed)
+demo.sh
+
+# Personal configs
+.bash_history
+.bashrc
+.gitconfig
+.cache/
+.config/
+.local/
+.npm/
+.ipython/
+.jupyter/
+.local/

@@ -1,0 +1,76 @@
+# .github/workflows/cd.yml
+name: CD - Build & Push to Artifact Registry (with CML report)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write  # required by CML to post comments
+
+env:
+  IMAGE_NAME: ${ { secrets.IMAGE_NAME } } # optional; set in secrets or change below
+  REGION: ${{ secrets.REGION }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT }}
+          export_default_credentials: true
+
+      - name: Configure docker for Artifact Registry
+        run: |
+          # artifact registry docker host is REGION-docker.pkg.dev
+          gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
+        env:
+          REGION: ${{ secrets.REGION }}
+
+      - name: Determine image URI
+        id: image_uri
+        run: |
+          IMAGE_NAME=${{ secrets.IMAGE_NAME || 'fraud-detector' }}
+          IMAGE_URI="${REGION}-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY }}/${IMAGE_NAME}:${GITHUB_SHA}"
+          echo "IMAGE_URI=${IMAGE_URI}" >> $GITHUB_OUTPUT
+        env:
+          REGION: ${{ secrets.REGION }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t $IMAGE_URI .
+        env:
+          IMAGE_URI: ${{ steps.image_uri.outputs.IMAGE_URI }}
+
+      - name: Push Docker image to Artifact Registry
+        run: |
+          docker push $IMAGE_URI
+        env:
+          IMAGE_URI: ${{ steps.image_uri.outputs.IMAGE_URI }}
+
+      - name: Setup CML
+        uses: iterative/setup-cml@v2
+
+      - name: Create CML report and post comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_URI: ${{ steps.image_uri.outputs.IMAGE_URI }}
+        run: |
+          echo "## Build & Push Report" > report.md
+          echo "" >> report.md
+          echo "- Image: \`$IMAGE_URI\`" >> report.md
+          echo "- Commit: \`${GITHUB_SHA}\`" >> report.md
+          echo "- Status: **SUCCESS**" >> report.md
+          # attach optional extra info (size, time)
+          docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}" | sed -n '1,5p' >> report.md || true
+          # post comment on PR/commit
+          cml comment create report.md
