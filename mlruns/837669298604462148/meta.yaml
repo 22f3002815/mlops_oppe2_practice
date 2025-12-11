@@ -1,0 +1,6 @@
+artifact_location: file:///home/jupyter/mlruns/837669298604462148
+creation_time: 1765477290107
+experiment_id: '837669298604462148'
+last_update_time: 1765477290107
+lifecycle_stage: active
+name: explain_fair_monitor

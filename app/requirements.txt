@@ -12,3 +12,8 @@ opentelemetry-instrumentation-fastapi
 # opentelemetry-exporter-otlp-proto-http
 dvc-gs
 mlflow 
+xgboost 
+shap 
+fairlearn 
+matplotlib 
+seaborn 
