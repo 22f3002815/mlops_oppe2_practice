@@ -4,11 +4,6 @@ key.json
 *-key.json
 service-account*.json
 
-# Large data files
-data/
-*.csv
-transactions_*.csv
-
 # Python
 __pycache__/
 *.py[cod]
