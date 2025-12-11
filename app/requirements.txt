@@ -10,3 +10,5 @@ opentelemetry-sdk
 opentelemetry-instrumentation-fastapi
 # Uncomment if using OTLP exporter:
 # opentelemetry-exporter-otlp-proto-http
+dvc-gs
+mlflow 

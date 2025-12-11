@@ -1,0 +1,6 @@
+artifact_location: file:///home/jupyter/mlruns/421953757186940149
+creation_time: 1765475799170
+experiment_id: '421953757186940149'
+last_update_time: 1765475799170
+lifecycle_stage: active
+name: poisoning_experiment
