@@ -1,0 +1,15 @@
+# k8s/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: fraud-detector-lb
+  labels:
+    app: fraud-detector
+spec:
+  type: LoadBalancer
+  selector:
+    app: fraud-detector
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080

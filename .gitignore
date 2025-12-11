@@ -21,7 +21,6 @@ build/
 
 # Machine Learning Models
 app/model/
-*.pkl
 *.h5
 *.pt
 *.pth
@@ -47,10 +46,6 @@ Thumbs.db
 
 # Docker
 *.log
-
-# DVC (if not using)
-.dvc/
-.dvcignore
 
 # Shell scripts (optional - keep if needed)
 demo.sh

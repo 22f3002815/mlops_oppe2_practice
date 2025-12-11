@@ -1,0 +1,42 @@
+# k8s/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud-detector
+  labels:
+    app: fraud-detector
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fraud-detector
+  template:
+    metadata:
+      labels:
+        app: fraud-detector
+    spec:
+      containers:
+        - name: fraud-detector
+          # REPLACE IMAGE_URI below with your image from Artifact Registry
+          image: "us-central1-docker.pkg.dev/yuvi823-counterapp/fraud-repo/fraud-detector:75be7a18ffe2462f9b1ea4a28a84179a96971a28"
+          imagePullPolicy: Always
+          env:
+            - name: MODEL_PATH
+              value: "/app/model/model.pkl"
+            # Optional: OTEL_EXPORTER_OTLP_ENDPOINT for shipping traces to a collector
+            # - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            #   value: "http://otel-collector.default.svc.cluster.local:4318/v1/traces"
+          ports:
+            - containerPort: 8080
+              name: http
+          # Recommended resource requests/limits (adjust to your model)
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+      # If your artifact registry needs imagePullSecrets, add here
+      # imagePullSecrets:
+      #  - name: artifact-registry-secret

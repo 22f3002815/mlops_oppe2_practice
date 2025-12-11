@@ -1,7 +1,12 @@
 fastapi
-uvicorn[standard]
+uvicorn
 scikit-learn
-pandas
-numpy
 joblib
+numpy
+pandas
 pydantic
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-instrumentation-fastapi
+# Uncomment if using OTLP exporter:
+# opentelemetry-exporter-otlp-proto-http
